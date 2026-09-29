@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.raysi</groupId>
-    <artifactId>02-first-springboot-application</artifactId>
+    <artifactId>first-application</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>02-first-springboot-application</name>
     <description>02-first-springboot-application</description>
