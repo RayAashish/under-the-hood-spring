@@ -63,6 +63,8 @@ This structure is called **Client–Server Architecture**.
 
 ## 2. Client–Server Architecture
 
+
+
 ### What is a Client?
 
 A **client** is the side that asks for something.
