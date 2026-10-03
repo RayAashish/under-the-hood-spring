@@ -208,14 +208,14 @@ This means:
 
 ```java
 @Configuration
-@ComponentScan("in.coderarmy")
+@ComponentScan("com.raysi")
 public class AppConfig {
 }
 ```
 
 This class tells Spring:
 - This is a configuration class.
-- Scan the package `in.coderarmy`.
+- Scan the package `com.raysi`.
 - Find classes marked with annotations like `@Component`.
 - Create their beans.
 - Wire their dependencies.
@@ -258,13 +258,13 @@ When Spring starts, it needs to know where to search for classes marked with ann
 
 ```java
 @Configuration
-@ComponentScan("com.coderarmy")
+@ComponentScan("com.raysi")
 public class AppConfig {
 }
 ```
 
 This tells Spring:
-- Start scanning from `com.coderarmy`.
+- Start scanning from `com.raysi`.
 - Also scan its sub-packages.
 - Find classes marked with `@Component`, `@Service`, `@Repository`, `@Controller`, etc.
 - Register them as beans.
@@ -287,7 +287,7 @@ public class AppConfig {
 ```
 
 In this case, Spring scans the package where `AppConfig` is present and its sub-packages.  
-For example, if `AppConfig` is located in `in.coderarmy.AppConfig`, Spring scans `in.coderarmy` and all its sub-packages.
+For example, if `AppConfig` is located in `com.raysi.AppConfig`, Spring scans `com.raysi` and all its sub-packages.
 
 ---
 
@@ -474,7 +474,7 @@ Spring starts the container and performs several internal steps:
   Spring inspects the class metadata, recognizing it contains configuration instructions and annotations.
 
 - **Step 3: Spring Processes `@ComponentScan`**  
-  If `AppConfig` contains `@ComponentScan("com.coderarmy")`, Spring notes to search inside `com.coderarmy` and all its sub-packages.
+  If `AppConfig` contains `@ComponentScan("com.raysi")`, Spring notes to search inside `com.raysi` and all its sub-packages.
 
 - **Step 4: Spring Finds Component Classes**  
   Spring scans the classpath and locates classes annotated with `@Component`, `@Service`, `@Repository`, `@Controller`, etc.:
@@ -490,7 +490,7 @@ Spring starts the container and performs several internal steps:
   Before creating actual instances, Spring stores metadata about each object in a `BeanDefinition`:
   ```
   Bean name         -> paymentService
-  Bean class        -> com.coderarmy.service.PaymentService
+  Bean class        -> com.raysi.service.PaymentService
   Scope             -> singleton
   Dependencies      -> none
   Creation strategy -> constructor
