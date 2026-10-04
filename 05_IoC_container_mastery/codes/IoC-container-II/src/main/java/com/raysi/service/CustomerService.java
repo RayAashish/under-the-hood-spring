@@ -2,6 +2,7 @@ package com.raysi.service;
 
 import com.raysi.payment.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -9,7 +10,7 @@ public class CustomerService {
     private final PaymentService paymentService;
 
     @Autowired
-    public CustomerService(PaymentService paymentService){
+    public CustomerService(@Qualifier("card") PaymentService paymentService){
         this.paymentService = paymentService;
     }
 
