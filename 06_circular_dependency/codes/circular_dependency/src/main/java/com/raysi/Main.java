@@ -1,14 +1,15 @@
 package com.raysi;
 
 
-import com.raysi.service.A;
+import com.raysi.service.OrderService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class Main {
     public static void main(String[] args) {
         ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        A a = context.getBean(A.class);
-        a.doSomething();
+
+        OrderService orderService = context.getBean(OrderService.class);
+        orderService.placeOrder();
     }
 }
