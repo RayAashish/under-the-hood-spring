@@ -5,6 +5,102 @@
 
 ---
 
+## Introduction & Table of Contents
+
+This document provides a complete reference guide for Spring XML-based configuration, bean lifecycle management, dependency injection patterns, and modular container setups.
+
+### Quick Navigation
+
+- [1. Why XML Configuration Exists](#1-why-xml-configuration-exists)
+- [2. What Does Spring Actually Need?](#2-what-does-spring-actually-need)
+- [3. Configuration Metadata in Spring](#3-configuration-metadata-in-spring)
+- [4. Why Should We Learn XML Configuration?](#4-why-should-we-learn-xml-configuration)
+- [5. Recommended Project Structure](#5-recommended-project-structure)
+
+#### Part 1: Creating the First XML Bean
+- [6. Create a Simple Java Class](#6-create-a-simple-java-class)
+- [7. Create beans.xml](#7-create-beansxml)
+- [8. Register the First Bean](#8-register-the-first-bean)
+- [9. XML Bean Compared with @Component](#9-xml-bean-compared-with-component)
+- [10. Load XML Configuration in Java](#10-load-xml-configuration-in-java)
+- [11. Why Did the Constructor Run Immediately?](#11-why-did-the-constructor-run-immediately)
+
+#### Part 2: Getting Beans from the Container
+- [12. Get Bean by Name](#12-get-bean-by-name)
+- [13. Get Bean by Name and Type](#13-get-bean-by-name-and-type)
+- [14. Get Bean by Type](#14-get-bean-by-type)
+
+#### Part 3: Bean Naming in XML
+- [15. Bean Name Convention](#15-bean-name-convention)
+- [16. What If We Do Not Give an id?](#16-what-if-we-do-not-give-an-id)
+- [17. What If Two Beans Have the Same id?](#17-what-if-two-beans-have-the-same-id)
+- [18. Create Two Different Beans](#18-create-two-different-beans)
+
+#### Part 4: id, name, and Alias
+- [19. id Attribute](#19-id-attribute)
+- [20. name Attribute](#20-name-attribute)
+- [21. Multiple Names Using name](#21-multiple-names-using-name)
+- [22. External Alias Using `<alias>`](#22-external-alias-using-alias)
+
+#### Part 5 & 6: Dependency Injection & Constructor Injection
+- [23. Two Common Ways of Dependency Injection in XML](#23-two-common-ways-of-dependency-injection-in-xml)
+- [24. Constructor Injection with Bean Reference](#24-constructor-injection-with-bean-reference)
+- [25. Constructor Injection with Simple Value](#25-constructor-injection-with-simple-value)
+- [26. Constructor Injection with Multiple Arguments](#26-constructor-injection-with-multiple-arguments)
+- [27. Constructor Injection by Index](#27-constructor-injection-by-index)
+- [28. Constructor Injection by Name](#28-constructor-injection-by-name)
+- [29. Constructor Injection by Type](#29-constructor-injection-by-type)
+- [30. Summary of Constructor Injection Options](#30-summary-of-constructor-injection-options)
+
+#### Part 7: Setter Injection
+- [31. Create OrderService with Setter](#31-create-orderservice-with-setter)
+- [32. XML Configuration for Setter Injection](#32-xml-configuration-for-setter-injection)
+- [33. value vs ref](#33-value-vs-ref)
+
+#### Part 8: Duplicate Beans During Dependency Injection
+- [34. Problem: Multiple Beans of Same Type](#34-problem-multiple-beans-of-same-type)
+- [35. Solution 1: Explicit Wiring Using ref](#35-solution-1-explicit-wiring-using-ref)
+- [36. Solution 2: Using primary="true"](#36-solution-2-using-primarytrue)
+- [37. Solution 3: Using autowire-candidate="false"](#37-solution-3-using-autowire-candidatefalse)
+
+#### Part 9: XML Autowiring
+- [38. What Is XML Autowiring?](#38-what-is-xml-autowiring)
+- [39. Common XML Autowiring Modes](#39-common-xml-autowiring-modes)
+- [40. autowire="byName"](#40-autowirebyname)
+- [41. autowire="byType"](#41-autowirebytype)
+- [42. autowire="constructor"](#42-autowireconstructor)
+- [43. Comparison of XML Autowiring Modes](#43-comparison-of-xml-autowiring-modes)
+
+#### Part 10: Bean Scopes in XML
+- [44. Two Important Scopes](#44-two-important-scopes)
+- [45. Singleton Scope](#45-singleton-scope)
+- [46. Prototype Scope](#46-prototype-scope)
+- [47. Singleton Bean Depending on Prototype Bean](#47-singleton-bean-depending-on-prototype-bean)
+
+#### Part 11: Bean Lifecycle Methods in XML
+- [48. Custom Init and Destroy Methods](#48-custom-init-and-destroy-methods)
+- [49. XML Configuration with init-method and destroy-method](#49-xml-configuration-with-init-method-and-destroy-method)
+- [50. Closing the Context](#50-closing-the-context)
+- [51. Prototype Scope with Init and Destroy](#51-prototype-scope-with-init-and-destroy)
+
+#### Part 12: Collection Injection in XML
+- [52. Injecting a List](#52-injecting-a-list)
+- [53. Injecting a Map](#53-injecting-a-map)
+
+#### Part 13: Splitting XML Files
+- [54. Why Split XML Files?](#54-why-split-xml-files)
+- [55. Example: orderContext.xml](#55-example-ordercontextxml)
+- [56. Example: userContext.xml](#56-example-usercontextxml)
+- [57. Main File: applicationContext.xml](#57-main-file-applicationcontextxml)
+
+#### Part 14 & Summary
+- [58. Can XML and Annotations Work Together?](#58-can-xml-and-annotations-work-together)
+- [59. Component Scanning from XML](#59-component-scanning-from-xml)
+- [60. Should Beginners Mix XML and Annotations?](#60-should-beginners-mix-xml-and-annotations)
+- [Final Summary & Key Takeaways](#final-summary--key-takeaways)
+
+---
+
 ## 1. Why XML Configuration Exists
 
 In Spring, annotations are not the only way to tell the IoC container which objects it should manage.
@@ -16,6 +112,8 @@ XML configuration is another way of telling Spring:
 - These are the objects you need to create.
 - These are their dependencies.
 - Please manage them inside the IoC container.
+
+[Back to Top](#quick-navigation)
 
 ---
 
@@ -34,6 +132,8 @@ To do this, Spring needs configuration information such as:
 7. Which method should run before bean destruction?
 
 This information is called **configuration metadata**.
+
+[Back to Top](#quick-navigation)
 
 ---
 
@@ -69,6 +169,8 @@ No matter which style we use, Spring converts this configuration metadata into i
 - XML, annotations, and Java config are only different ways of giving instructions to Spring.
 - Internally, Spring uses those instructions to create bean definitions (`BeanDefinition`).
 
+[Back to Top](#quick-navigation)
+
 ---
 
 ## 4. Why Should We Learn XML Configuration?
@@ -91,6 +193,8 @@ Annotations sometimes hide what Spring is doing internally. XML makes the wiring
 - Which lifecycle method should be called
 
 This makes XML a great way to understand the foundation of Spring.
+
+[Back to Top](#quick-navigation)
 
 ---
 
@@ -124,9 +228,9 @@ new ClassPathXmlApplicationContext("beans.xml");
 ```
 Spring searches for `beans.xml` from the classpath root.
 
----
+[Back to Top](#quick-navigation)
 
-# Part 1: Creating the First XML Bean
+---
 
 ## 6. Create a Simple Java Class
 
@@ -150,9 +254,11 @@ public class PaymentService {
 - Therefore, Spring will not automatically detect it.
 - We will register this class as a bean manually using XML.
 
+[Back to Top](#quick-navigation)
+
 ---
 
-## 7. Create `beans.xml`
+## 7. Create beans.xml
 
 Inside `src/main/resources`, create a file named `beans.xml`.
 
@@ -171,6 +277,8 @@ Add the basic XML structure:
 
 - For now, this XML file is empty.
 - The root `<beans>` tag is the container where all bean definitions are declared.
+
+[Back to Top](#quick-navigation)
 
 ---
 
@@ -206,9 +314,11 @@ Now add a `<bean>` definition inside the `<beans>` tag:
 | **`id`** | Name of the bean inside the Spring container |
 | **`class`** | Fully qualified class name whose object Spring should instantiate |
 
+[Back to Top](#quick-navigation)
+
 ---
 
-## 9. XML Bean Compared with `@Component`
+## 9. XML Bean Compared with @Component
 
 In annotation-based configuration, we write:
 ```java
@@ -237,6 +347,8 @@ public class PaymentService {
 | **Location** | Written directly inside Java class | Written inside external XML file |
 | **Detection** | Detected using component scanning | Read directly from XML definitions |
 | **Bean Naming** | Usually generated automatically | Usually specified manually |
+
+[Back to Top](#quick-navigation)
 
 ---
 
@@ -269,6 +381,8 @@ PaymentService object created
 Payment successful
 ```
 
+[Back to Top](#quick-navigation)
+
 ---
 
 ## 11. Why Did the Constructor Run Immediately?
@@ -281,14 +395,14 @@ ApplicationContext context =
 Spring loads the XML file and creates the beans immediately.
 
 By default, Spring beans are:
-$$	ext{singleton} + 	ext{eager}$$
+**singleton + eager**
 
 - This means Spring creates singleton beans immediately when the container starts.
 - That is why `"PaymentService object created"` prints before calling `getBean()`.
 
----
+[Back to Top](#quick-navigation)
 
-# Part 2: Getting Beans from the Container
+---
 
 ## 12. Get Bean by Name
 
@@ -297,6 +411,8 @@ PaymentService paymentService =
         (PaymentService) context.getBean("paymentService");
 ```
 *Note:* This works, but requires manual type casting.
+
+[Back to Top](#quick-navigation)
 
 ---
 
@@ -307,6 +423,8 @@ PaymentService paymentService =
         context.getBean("paymentService", PaymentService.class);
 ```
 *Note:* This is a safer and cleaner approach because it avoids manual casting and provides compile-time type safety.
+
+[Back to Top](#quick-navigation)
 
 ---
 
@@ -340,9 +458,9 @@ org.springframework.beans.factory.NoUniqueBeanDefinitionException
 ```
 because multiple beans match the same type.
 
----
+[Back to Top](#quick-navigation)
 
-# Part 3: Bean Naming in XML
+---
 
 ## 15. Bean Name Convention
 
@@ -353,9 +471,11 @@ Bean names usually follow standard Java camelCase variable naming conventions.
 ```
 Here, the bean name is `paymentService`.
 
+[Back to Top](#quick-navigation)
+
 ---
 
-## 16. What If We Do Not Give an `id`?
+## 16. What If We Do Not Give an id?
 
 We can omit the `id`:
 ```xml
@@ -376,9 +496,11 @@ PaymentService paymentService = context.getBean(PaymentService.class);
 
 > **Best Practice:** For XML configuration, always give beans a clear, explicit `id`.
 
+[Back to Top](#quick-navigation)
+
 ---
 
-## 17. What If Two Beans Have the Same `id`?
+## 17. What If Two Beans Have the Same id?
 
 This is **invalid**:
 ```xml
@@ -386,6 +508,8 @@ This is **invalid**:
 <bean id="paymentService" class="in.raysi.PaymentService"/>
 ```
 In the same XML configuration file, bean IDs must be unique. Otherwise, Spring cannot unambiguously identify which bean is referenced by `context.getBean("paymentService")`.
+
+[Back to Top](#quick-navigation)
 
 ---
 
@@ -424,19 +548,11 @@ paymentService.pay();
 orderService.placeOrder();
 ```
 
-### Output:
-```text
-PaymentService object created
-OrderService object created
-Payment successful
-Order placed
-```
+[Back to Top](#quick-navigation)
 
 ---
 
-# Part 4: `id`, `name`, and Alias
-
-## 19. `id` Attribute
+## 19. id Attribute
 
 The `id` attribute gives one unique identifier to a bean:
 ```xml
@@ -448,9 +564,11 @@ PaymentService paymentService =
         context.getBean("paymentService", PaymentService.class);
 ```
 
+[Back to Top](#quick-navigation)
+
 ---
 
-## 20. `name` Attribute
+## 20. name Attribute
 
 XML also supports the `name` attribute:
 ```xml
@@ -464,9 +582,11 @@ PaymentService paymentService =
 
 At a basic level, both `<bean id="..."/>` and `<bean name="..."/>` allow accessing the bean using that name.
 
+[Back to Top](#quick-navigation)
+
 ---
 
-## 21. Multiple Names Using `name`
+## 21. Multiple Names Using name
 
 - The `id` attribute provides one unique primary name.
 - The `name` attribute allows specifying multiple comma-separated or whitespace-separated aliases.
@@ -486,9 +606,11 @@ context.getBean("transactionService", PaymentService.class);
 ```
 All of these refer to the exact same bean instance.
 
+[Back to Top](#quick-navigation)
+
 ---
 
-## 22. External Alias Using `<alias>`
+## 22. External Alias Using alias
 
 When a bean is already defined in an XML file:
 ```xml
@@ -505,9 +627,9 @@ PaymentService paymentService =
         context.getBean("payService", PaymentService.class);
 ```
 
----
+[Back to Top](#quick-navigation)
 
-# Part 5: Dependency Injection in XML
+---
 
 ## 23. Two Common Ways of Dependency Injection in XML
 
@@ -517,9 +639,9 @@ In XML configuration, dependency injection is mainly done in two ways:
 
 > **Note:** XML does not directly support field injection (such as private field reflection without setters/constructors). Spring injects dependencies in XML by invoking either constructors or setter methods.
 
----
+[Back to Top](#quick-navigation)
 
-# Part 6: Constructor Injection
+---
 
 ## 24. Constructor Injection with Bean Reference
 
@@ -562,6 +684,8 @@ public class OrderService {
 | **`constructor-arg`** | Injects value or dependency through a constructor |
 | **`ref`** | Specifies a reference to another bean managed in the container |
 
+[Back to Top](#quick-navigation)
+
 ---
 
 ## 25. Constructor Injection with Simple Value
@@ -590,7 +714,9 @@ public class PaymentService {
     <constructor-arg value="Razorpay"/>
 </bean>
 ```
-`value="Razorpay"` instructs Spring to pass `"Razorpay"` as a literal literal value, rather than resolving a bean reference.
+`value="Razorpay"` instructs Spring to pass `"Razorpay"` as a literal value, rather than resolving a bean reference.
+
+[Back to Top](#quick-navigation)
 
 ---
 
@@ -624,6 +750,8 @@ public class PaymentService {
 ```
 Spring matches constructor arguments by order and compatible type.
 
+[Back to Top](#quick-navigation)
+
 ---
 
 ## 27. Constructor Injection by Index
@@ -639,6 +767,8 @@ To guarantee parameter ordering unambiguously, specify the 0-based `index`:
 - `index="0"`: First constructor parameter
 - `index="1"`: Second constructor parameter
 
+[Back to Top](#quick-navigation)
+
 ---
 
 ## 28. Constructor Injection by Name
@@ -651,7 +781,8 @@ If debug symbols or `-parameters` compiler flags are preserved:
     <constructor-arg name="retryCount" value="3"/>
 </bean>
 ```
-This improves readability, though it requires parameter names to be discoverable at runtime.
+
+[Back to Top](#quick-navigation)
 
 ---
 
@@ -666,6 +797,8 @@ When argument ambiguity arises:
 </bean>
 ```
 
+[Back to Top](#quick-navigation)
+
 ---
 
 ## 30. Summary of Constructor Injection Options
@@ -677,11 +810,11 @@ When argument ambiguity arises:
 | **By name** | `<constructor-arg name="providerName" value="Razorpay"/>` | When parameter names are available & readability matters |
 | **By type** | `<constructor-arg type="java.lang.String" value="Razorpay"/>` | When constructor matching needs disambiguation |
 
+[Back to Top](#quick-navigation)
+
 ---
 
-# Part 7: Setter Injection
-
-## 31. Create `OrderService` with Setter
+## 31. Create OrderService with Setter
 
 ```java
 package in.raysi;
@@ -710,6 +843,8 @@ The JavaBean setter convention is required:
 public void setPaymentService(PaymentService paymentService)
 ```
 
+[Back to Top](#quick-navigation)
+
 ---
 
 ## 32. XML Configuration for Setter Injection
@@ -731,18 +866,20 @@ public void setPaymentService(PaymentService paymentService)
 2. Resolve bean with ID `paymentService`.
 3. Call `setPaymentService(paymentService)`.
 
+[Back to Top](#quick-navigation)
+
 ---
 
-## 33. `value` vs `ref`
+## 33. value vs ref
 
 | Attribute | Meaning | Example |
 | :--- | :--- | :--- |
 | **`value`** | Injects primitive literals or strings (`String`, `int`, `boolean`) | `<constructor-arg value="Razorpay"/>` |
 | **`ref`** | Injects a reference to another bean in the Spring container | `<constructor-arg ref="paymentService"/>` |
 
----
+[Back to Top](#quick-navigation)
 
-# Part 8: Duplicate Beans During Dependency Injection
+---
 
 ## 34. Problem: Multiple Beans of Same Type
 
@@ -754,9 +891,11 @@ Suppose `OrderService` depends on `PaymentService`, but two beans exist:
 ```
 Spring cannot guess which one to inject automatically.
 
+[Back to Top](#quick-navigation)
+
 ---
 
-## 35. Solution 1: Explicit Wiring Using `ref` (Recommended)
+## 35. Solution 1: Explicit Wiring Using ref
 
 ```xml
 <bean id="razorpayPaymentService" class="in.raysi.RazorpayPaymentService"/>
@@ -768,9 +907,11 @@ Spring cannot guess which one to inject automatically.
 ```
 Explicit wiring removes ambiguity completely: Spring knows exactly to inject `razorpayPaymentService`.
 
+[Back to Top](#quick-navigation)
+
 ---
 
-## 36. Solution 2: Using `primary="true"`
+## 36. Solution 2: Using primary="true"
 
 ```xml
 <bean id="razorpayPaymentService"
@@ -782,9 +923,11 @@ Explicit wiring removes ambiguity completely: Spring knows exactly to inject `ra
 ```
 When Spring resolves dependencies by type, the bean flagged with `primary="true"` is prioritized.
 
+[Back to Top](#quick-navigation)
+
 ---
 
-## 37. Solution 3: Using `autowire-candidate="false"`
+## 37. Solution 3: Using autowire-candidate="false"
 
 ```xml
 <bean id="razorpayPaymentService"
@@ -796,9 +939,9 @@ When Spring resolves dependencies by type, the bean flagged with `primary="true"
 ```
 This instructs Spring: **do not consider `stripePaymentService` as a candidate for autowiring**.
 
----
+[Back to Top](#quick-navigation)
 
-# Part 9: XML Autowiring
+---
 
 ## 38. What Is XML Autowiring?
 
@@ -820,6 +963,8 @@ Instead of manually wiring every dependency with `<constructor-arg ref="...">` o
       autowire="byName"/>
 ```
 
+[Back to Top](#quick-navigation)
+
 ---
 
 ## 39. Common XML Autowiring Modes
@@ -830,9 +975,11 @@ Instead of manually wiring every dependency with `<constructor-arg ref="...">` o
 | **`byType`** | Matches dependency using matching bean type |
 | **`constructor`** | Matches constructor parameter types using available beans in the container |
 
+[Back to Top](#quick-navigation)
+
 ---
 
-## 40. `autowire="byName"`
+## 40. autowire="byName"
 
 ```xml
 <bean id="paymentService" class="in.raysi.PaymentService"/>
@@ -852,9 +999,11 @@ public void setPaymentService(PaymentService paymentService) {
 2. Searches the container for a bean whose `id` is `paymentService`.
 3. Injects that bean automatically.
 
+[Back to Top](#quick-navigation)
+
 ---
 
-## 41. `autowire="byType"`
+## 41. autowire="byType"
 
 ```xml
 <bean id="abc" class="in.raysi.PaymentService"/>
@@ -868,9 +1017,11 @@ public void setPaymentService(PaymentService paymentService) {
 - Since `OrderService` needs a `PaymentService`, Spring finds bean `abc` because its type matches `PaymentService`.
 - **Limitation:** Fails if multiple beans of type `PaymentService` exist in the container.
 
+[Back to Top](#quick-navigation)
+
 ---
 
-## 42. `autowire="constructor"`
+## 42. autowire="constructor"
 
 ```xml
 <bean id="paymentService" class="in.raysi.PaymentService"/>
@@ -881,6 +1032,8 @@ public void setPaymentService(PaymentService paymentService) {
 ```
 
 Spring inspects the constructor of `OrderService`, identifies parameters requiring `PaymentService`, and resolves matching beans from the container.
+
+[Back to Top](#quick-navigation)
 
 ---
 
@@ -894,15 +1047,17 @@ Spring inspects the constructor of `OrderService`, identifies parameters requiri
 
 > **Guideline:** Explicit wiring with `ref` is clearer and preferred for maintainability. Autowiring in XML should be used judiciously.
 
----
+[Back to Top](#quick-navigation)
 
-# Part 10: Bean Scopes in XML
+---
 
 ## 44. Two Important Scopes
 
 Spring supports multiple bean scopes. The two core scopes are:
 1. **`singleton`** (Default)
 2. **`prototype`**
+
+[Back to Top](#quick-navigation)
 
 ---
 
@@ -923,6 +1078,8 @@ System.out.println(p1 == p2); // Prints: true
 ```
 Both references point to the exact same memory address.
 
+[Back to Top](#quick-navigation)
+
 ---
 
 ## 46. Prototype Scope
@@ -942,22 +1099,15 @@ PaymentService p2 = context.getBean("paymentService", PaymentService.class);
 System.out.println(p1 == p2); // Prints: false
 ```
 
-### Output:
-```text
-PaymentService object created
-PaymentService object created
-false
-```
+[Back to Top](#quick-navigation)
 
 ---
 
 ## 47. Singleton Bean Depending on Prototype Bean
 
 Consider this common design scenario:
-- `OrderService` $
-ightarrow$ `singleton`
-- `PaymentService` $
-ightarrow$ `prototype`
+- `OrderService` -> `singleton`
+- `PaymentService` -> `prototype`
 
 ```xml
 <bean id="paymentService"
@@ -974,9 +1124,9 @@ ightarrow$ `prototype`
 > **Critical Rule:** The prototype bean is injected **only once** at the time the singleton bean is created.  
 > `OrderService` will keep using that same injected `PaymentService` instance across all calls. It does **not** fetch a new prototype instance per method invocation.
 
----
+[Back to Top](#quick-navigation)
 
-# Part 11: Bean Lifecycle Methods in XML
+---
 
 ## 48. Custom Init and Destroy Methods
 
@@ -1005,9 +1155,11 @@ public class PaymentService {
 }
 ```
 
+[Back to Top](#quick-navigation)
+
 ---
 
-## 49. XML Configuration with `init-method` and `destroy-method`
+## 49. XML Configuration with init-method and destroy-method
 
 ```xml
 <bean id="paymentService"
@@ -1020,6 +1172,8 @@ public class PaymentService {
 | :--- | :--- |
 | **`init-method`** | Method to execute after instantiation and dependency injection |
 | **`destroy-method`** | Method to execute before container shutdown and bean destruction |
+
+[Back to Top](#quick-navigation)
 
 ---
 
@@ -1049,6 +1203,8 @@ try (ClassPathXmlApplicationContext context =
 } // Context automatically closes here
 ```
 
+[Back to Top](#quick-navigation)
+
 ---
 
 ## 51. Prototype Scope with Init and Destroy
@@ -1069,9 +1225,9 @@ For prototype beans:
 
 > **Crucial Rule:** Spring does **not** call `destroy-method` for prototype beans when the container closes. The client code is responsible for cleaning up prototype instances.
 
----
+[Back to Top](#quick-navigation)
 
-# Part 12: Collection Injection in XML
+---
 
 ## 52. Injecting a List
 
@@ -1105,6 +1261,8 @@ public class UserService {
     </constructor-arg>
 </bean>
 ```
+
+[Back to Top](#quick-navigation)
 
 ---
 
@@ -1141,9 +1299,9 @@ public class PaymentService {
 </bean>
 ```
 
----
+[Back to Top](#quick-navigation)
 
-# Part 13: Splitting XML Files
+---
 
 ## 54. Why Split XML Files?
 
@@ -1156,9 +1314,11 @@ src/main/resources
  └── userContext.xml         (User subsystem)
 ```
 
+[Back to Top](#quick-navigation)
+
 ---
 
-## 55. Example: `orderContext.xml`
+## 55. Example: orderContext.xml
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -1176,9 +1336,11 @@ src/main/resources
 </beans>
 ```
 
+[Back to Top](#quick-navigation)
+
 ---
 
-## 56. Example: `userContext.xml`
+## 56. Example: userContext.xml
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -1192,9 +1354,11 @@ src/main/resources
 </beans>
 ```
 
+[Back to Top](#quick-navigation)
+
 ---
 
-## 57. Main File: `applicationContext.xml`
+## 57. Main File: applicationContext.xml
 
 Aggregates module files using `<import>`:
 
@@ -1218,9 +1382,9 @@ ClassPathXmlApplicationContext context =
         new ClassPathXmlApplicationContext("applicationContext.xml");
 ```
 
----
+[Back to Top](#quick-navigation)
 
-# Part 14: XML and Annotation Configuration Together
+---
 
 ## 58. Can XML and Annotations Work Together?
 
@@ -1228,6 +1392,8 @@ ClassPathXmlApplicationContext context =
 - Legacy beans declared in XML.
 - Modern domain beans discovered via `@Component` scanning.
 - Infrastructure beans instantiated via Java `@Configuration` and `@Bean`.
+
+[Back to Top](#quick-navigation)
 
 ---
 
@@ -1252,6 +1418,8 @@ To activate annotation scanning from an XML configuration file, use `<context:co
 </beans>
 ```
 
+[Back to Top](#quick-navigation)
+
 ---
 
 ## 60. Should Beginners Mix XML and Annotations?
@@ -1263,11 +1431,11 @@ For foundational learning, study each strategy independently:
 
 Mixing both prematurely introduces debugging friction due to circular references, duplicate bean definitions, and overlapping lifecycle declarations.
 
+[Back to Top](#quick-navigation)
+
 ---
 
-# Final Summary
-
-### Key Takeaways
+## Final Summary & Key Takeaways
 
 - **Configuration Metadata:** XML provides metadata instructions that Spring converts into internal `BeanDefinition` records.
 - **`<bean>` Definition:** Defines managed components. `id` provides the unique name; `class` gives the fully qualified class name.
@@ -1281,6 +1449,8 @@ Mixing both prematurely introduces debugging friction due to circular references
 - **Lifecycles:** `init-method` and `destroy-method` manage callbacks without coupling classes to Spring interfaces. Spring does not manage destroy callbacks for prototype beans.
 - **Modularity:** Large configurations can be split across multiple context files and imported using `<import resource="..."/>`.
 - **Interoperability:** XML and annotations coexist seamlessly through `<context:component-scan>`.
+
+[Back to Top](#quick-navigation)
 
 ---
 *Document prepared for raysi.*
