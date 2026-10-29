@@ -10,6 +10,6 @@ public class Main {
                 new ClassPathXmlApplicationContext("beans.xml");
 
         OrderService orderService = context.getBean(OrderService.class);
-//        orderService.order();
+        orderService.order();
     }
 }

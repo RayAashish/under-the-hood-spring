@@ -6,7 +6,7 @@
 
     <!-- bean definitions here -->
     <bean id="orderService" class="com.raysi.service.OrderService">
-        <constructor-arg index="0" ref="com.raysi.service.PaymentService" />
+        <constructor-arg index="0" ref="" />
     </bean>
 
 </beans>
