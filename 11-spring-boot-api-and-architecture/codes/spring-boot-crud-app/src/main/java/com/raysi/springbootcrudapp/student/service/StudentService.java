@@ -9,4 +9,5 @@ import java.util.List;
 public interface StudentService {
     List<Student> getAllStudents();
     void saveAllStudents(List<Student> students);
+    void deleteStudent(Long id);
 }
